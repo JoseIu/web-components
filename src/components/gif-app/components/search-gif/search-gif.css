@@ -1,0 +1,21 @@
+.search-gif {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  & .search-gif__input {
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  & .search-gif__button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+  }
+}

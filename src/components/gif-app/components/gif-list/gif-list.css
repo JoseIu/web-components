@@ -1,0 +1,18 @@
+.gif-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1rem;
+
+  & .gif-list__item {
+    background-color: #222;
+    border-radius: 0.5rem;
+  }
+  & .gif-list__image {
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover;
+  }
+  & .gif-list__title {
+    color: #fff;
+  }
+}

@@ -5,7 +5,19 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Gif } from "./components/gif-app/interfaces/gif.interface";
+export { Gif } from "./components/gif-app/interfaces/gif.interface";
 export namespace Components {
+    interface ContDownApp {
+    }
+    interface GifApp {
+    }
+    interface GifList {
+        /**
+          * @default []
+         */
+        "gifs": Gif[];
+    }
     interface MyComponent {
         /**
           * The first name
@@ -20,19 +32,83 @@ export namespace Components {
          */
         "middle": string;
     }
+    interface NttDatePicker {
+    }
+    interface SearchGif {
+    }
+}
+export interface SearchGifCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSearchGifElement;
 }
 declare global {
+    interface HTMLContDownAppElement extends Components.ContDownApp, HTMLStencilElement {
+    }
+    var HTMLContDownAppElement: {
+        prototype: HTMLContDownAppElement;
+        new (): HTMLContDownAppElement;
+    };
+    interface HTMLGifAppElement extends Components.GifApp, HTMLStencilElement {
+    }
+    var HTMLGifAppElement: {
+        prototype: HTMLGifAppElement;
+        new (): HTMLGifAppElement;
+    };
+    interface HTMLGifListElement extends Components.GifList, HTMLStencilElement {
+    }
+    var HTMLGifListElement: {
+        prototype: HTMLGifListElement;
+        new (): HTMLGifListElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
+    interface HTMLNttDatePickerElement extends Components.NttDatePicker, HTMLStencilElement {
+    }
+    var HTMLNttDatePickerElement: {
+        prototype: HTMLNttDatePickerElement;
+        new (): HTMLNttDatePickerElement;
+    };
+    interface HTMLSearchGifElementEventMap {
+        "search": string;
+    }
+    interface HTMLSearchGifElement extends Components.SearchGif, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSearchGifElementEventMap>(type: K, listener: (this: HTMLSearchGifElement, ev: SearchGifCustomEvent<HTMLSearchGifElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSearchGifElementEventMap>(type: K, listener: (this: HTMLSearchGifElement, ev: SearchGifCustomEvent<HTMLSearchGifElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSearchGifElement: {
+        prototype: HTMLSearchGifElement;
+        new (): HTMLSearchGifElement;
+    };
     interface HTMLElementTagNameMap {
+        "cont-down-app": HTMLContDownAppElement;
+        "gif-app": HTMLGifAppElement;
+        "gif-list": HTMLGifListElement;
         "my-component": HTMLMyComponentElement;
+        "ntt-date-picker": HTMLNttDatePickerElement;
+        "search-gif": HTMLSearchGifElement;
     }
 }
 declare namespace LocalJSX {
+    interface ContDownApp {
+    }
+    interface GifApp {
+    }
+    interface GifList {
+        /**
+          * @default []
+         */
+        "gifs"?: Gif[];
+    }
     interface MyComponent {
         /**
           * The first name
@@ -47,15 +123,30 @@ declare namespace LocalJSX {
          */
         "middle"?: string;
     }
+    interface NttDatePicker {
+    }
+    interface SearchGif {
+        "onSearch"?: (event: SearchGifCustomEvent<string>) => void;
+    }
     interface IntrinsicElements {
+        "cont-down-app": ContDownApp;
+        "gif-app": GifApp;
+        "gif-list": GifList;
         "my-component": MyComponent;
+        "ntt-date-picker": NttDatePicker;
+        "search-gif": SearchGif;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "cont-down-app": LocalJSX.ContDownApp & JSXBase.HTMLAttributes<HTMLContDownAppElement>;
+            "gif-app": LocalJSX.GifApp & JSXBase.HTMLAttributes<HTMLGifAppElement>;
+            "gif-list": LocalJSX.GifList & JSXBase.HTMLAttributes<HTMLGifListElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "ntt-date-picker": LocalJSX.NttDatePicker & JSXBase.HTMLAttributes<HTMLNttDatePickerElement>;
+            "search-gif": LocalJSX.SearchGif & JSXBase.HTMLAttributes<HTMLSearchGifElement>;
         }
     }
 }

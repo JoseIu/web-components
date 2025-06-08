@@ -1,0 +1,85 @@
+@import '~lightpick/css/lightpick.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.calendar-container {
+}
+
+/* Estilos para los días */
+.lightpick__day {
+  position: relative;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+/* Estilo para los precios */
+.day-price {
+  font-size: 9px;
+  font-weight: bold;
+  color: #2e7d32; /* Verde */
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* Estilos para días seleccionados */
+.lightpick__day.is-selected .day-price {
+  color: white;
+}
+
+/* Estilos base */
+.date-picker-container {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.input-fields {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 15px;
+}
+
+.input-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.date-input {
+  max-width: 100%;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.accept-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+}

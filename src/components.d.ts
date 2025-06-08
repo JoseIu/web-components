@@ -18,6 +18,12 @@ export namespace Components {
          */
         "gifs": Gif[];
     }
+    interface LightPickerRf {
+        /**
+          * @default 'es'
+         */
+        "locale": string;
+    }
     interface MyComponent {
         /**
           * The first name
@@ -60,6 +66,12 @@ declare global {
         prototype: HTMLGifListElement;
         new (): HTMLGifListElement;
     };
+    interface HTMLLightPickerRfElement extends Components.LightPickerRf, HTMLStencilElement {
+    }
+    var HTMLLightPickerRfElement: {
+        prototype: HTMLLightPickerRfElement;
+        new (): HTMLLightPickerRfElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -93,6 +105,7 @@ declare global {
         "cont-down-app": HTMLContDownAppElement;
         "gif-app": HTMLGifAppElement;
         "gif-list": HTMLGifListElement;
+        "light-picker-rf": HTMLLightPickerRfElement;
         "my-component": HTMLMyComponentElement;
         "ntt-date-picker": HTMLNttDatePickerElement;
         "search-gif": HTMLSearchGifElement;
@@ -108,6 +121,12 @@ declare namespace LocalJSX {
           * @default []
          */
         "gifs"?: Gif[];
+    }
+    interface LightPickerRf {
+        /**
+          * @default 'es'
+         */
+        "locale"?: string;
     }
     interface MyComponent {
         /**
@@ -132,6 +151,7 @@ declare namespace LocalJSX {
         "cont-down-app": ContDownApp;
         "gif-app": GifApp;
         "gif-list": GifList;
+        "light-picker-rf": LightPickerRf;
         "my-component": MyComponent;
         "ntt-date-picker": NttDatePicker;
         "search-gif": SearchGif;
@@ -144,6 +164,7 @@ declare module "@stencil/core" {
             "cont-down-app": LocalJSX.ContDownApp & JSXBase.HTMLAttributes<HTMLContDownAppElement>;
             "gif-app": LocalJSX.GifApp & JSXBase.HTMLAttributes<HTMLGifAppElement>;
             "gif-list": LocalJSX.GifList & JSXBase.HTMLAttributes<HTMLGifListElement>;
+            "light-picker-rf": LocalJSX.LightPickerRf & JSXBase.HTMLAttributes<HTMLLightPickerRfElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
             "ntt-date-picker": LocalJSX.NttDatePicker & JSXBase.HTMLAttributes<HTMLNttDatePickerElement>;
             "search-gif": LocalJSX.SearchGif & JSXBase.HTMLAttributes<HTMLSearchGifElement>;

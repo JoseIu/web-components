@@ -12,9 +12,14 @@ export class LightPickerRf {
   private picker: Lightpick;
   private departureInput!: HTMLInputElement;
   private returnInput!: HTMLInputElement;
+
   private calendarContainer!: HTMLDivElement;
-  private navigationObserver!: MutationObserver;
   private debounceTimer: any;
+  private debouncerInput: any;
+  @State() departureDateError: string = '';
+  @State() inputValueDate: string = '';
+
+  // private liveRegion: HTMLElement;
   private lastLoadedRange: string = '';
 
   @Prop() locale: string = 'es';
@@ -24,21 +29,21 @@ export class LightPickerRf {
   @State() tripType: 'one-way' | 'round-trip' = 'round-trip';
   @State() departureDate: string = '';
   @State() returnDate: string = '';
+  @State() focusActiveGo: boolean = false;
+  @State() isEditing: boolean = false;
 
   componentWillLoad() {
-    this.isLoading = false;
+    this.isLoading = true;
   }
 
   async componentDidLoad() {
     await this.loadInitialPrices();
     this.initializePicker();
+    this.departureInput.removeEventListener('focus', this.picker._onInputFocus);
+    this.returnInput.removeEventListener('focus', this.picker._onInputFocus);
     this.setupEventListeners();
   }
-  disconnectedCallback() {
-    if (this.navigationObserver) {
-      this.navigationObserver.disconnect();
-    }
-  }
+
   private setupEventListeners() {
     // Delegación de eventos para clicks en botones de navegación
     this.calendarContainer.addEventListener('click', event => {
@@ -106,6 +111,8 @@ export class LightPickerRf {
       numberOfMonths: 2,
       minDate: moment(),
       parentEl: this.calendarContainer,
+      autoclose: false,
+      dropdowns: false,
       onOpen: () => {
         this.updateCalendarPrices();
         console.log('onOpen ');
@@ -206,6 +213,33 @@ export class LightPickerRf {
       this.returnDate = '';
     }
   }
+  private handleInputClick(event: MouseEvent) {
+    this.isEditing = false;
+    event.preventDefault();
+    this.openCalendar();
+  }
+  private openCalendar() {
+    this.picker.show();
+  }
+  private onFocusInput(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.isEditing = true; // Permitir edición
+    console.log('Input en foco, modo edición:', this.isEditing);
+
+    // Si necesitas manejar Lightpick manualmente
+    if (this.picker) {
+      this.picker.hide(); // Opcional: ocultar el datepicker si existe
+    }
+  }
+  private onInputChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const value = input.value;
+    console.log('Valor actual:', value);
+    console.log('Valor desde ref:', this.departureInput.value);
+
+    // Actualizar el estado si es necesario
+    this.departureDate = value;
+  }
 
   render() {
     return (
@@ -216,14 +250,50 @@ export class LightPickerRf {
 
         <div class="input-fields">
           <div class="input-group">
-            <label>FECHA IDA</label>
-            <input ref={el => (this.departureInput = el as HTMLInputElement)} class="date-input" value={this.departureDate} readonly placeholder="Seleccione fecha" />
+            <label id="departure-label" htmlFor="departure-input">
+              FECHA IDA
+            </label>
+            <input
+              id="departure-input"
+              type="text"
+              aria-labelledby="departure-label"
+              aria-describedby="departure-hint"
+              ref={el => (this.departureInput = el as HTMLInputElement)}
+              class="date-input"
+              value={this.departureDate}
+              readonly={!this.isEditing}
+              placeholder="Seleccione fecha"
+              onFocus={e => this.onFocusInput(e)}
+              onBlur={() => (this.focusActiveGo = false)}
+              onClick={e => this.handleInputClick(e)}
+              onInput={e => this.onInputChange(e)}
+              tabIndex={0}
+            />
+
+            <span id="departure-hint" class="sr-only">
+              Formato DD/MM/AAAA
+            </span>
+            {this.departureDateError && (
+              <span id="error-departure-input" class="error-message" aria-live="assertive">
+                {this.departureDateError}
+              </span>
+            )}
           </div>
 
           {this.tripType === 'round-trip' && (
             <div class="input-group">
               <label>FECHA VUELTA</label>
-              <input ref={el => (this.returnInput = el as HTMLInputElement)} class="date-input" value={this.returnDate} readonly placeholder="Seleccione fecha" />
+              <input
+                ref={el => (this.returnInput = el as HTMLInputElement)}
+                class="date-input"
+                value={this.returnDate}
+                readonly
+                placeholder="Seleccione fecha"
+                onFocus={() => (this.focusActiveGo = true)}
+                onBlur={() => (this.focusActiveGo = false)}
+                onClick={e => this.handleInputClick(e)}
+                tabIndex={0}
+              />
             </div>
           )}
         </div>

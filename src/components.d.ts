@@ -8,6 +8,16 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Gif } from "./components/gif-app/interfaces/gif.interface";
 export { Gif } from "./components/gif-app/interfaces/gif.interface";
 export namespace Components {
+    interface AppValidateInput {
+        /**
+          * @default 'Fecha de nacimiento'
+         */
+        "label": string;
+        /**
+          * @default 'es'
+         */
+        "lang": string;
+    }
     interface ContDownApp {
     }
     interface GifApp {
@@ -20,7 +30,7 @@ export namespace Components {
     }
     interface LightPickerRf {
         /**
-          * @default 'es'
+          * @default moment.locale('es')
          */
         "locale": string;
     }
@@ -48,6 +58,12 @@ export interface SearchGifCustomEvent<T> extends CustomEvent<T> {
     target: HTMLSearchGifElement;
 }
 declare global {
+    interface HTMLAppValidateInputElement extends Components.AppValidateInput, HTMLStencilElement {
+    }
+    var HTMLAppValidateInputElement: {
+        prototype: HTMLAppValidateInputElement;
+        new (): HTMLAppValidateInputElement;
+    };
     interface HTMLContDownAppElement extends Components.ContDownApp, HTMLStencilElement {
     }
     var HTMLContDownAppElement: {
@@ -102,6 +118,7 @@ declare global {
         new (): HTMLSearchGifElement;
     };
     interface HTMLElementTagNameMap {
+        "app-validate-input": HTMLAppValidateInputElement;
         "cont-down-app": HTMLContDownAppElement;
         "gif-app": HTMLGifAppElement;
         "gif-list": HTMLGifListElement;
@@ -112,6 +129,16 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AppValidateInput {
+        /**
+          * @default 'Fecha de nacimiento'
+         */
+        "label"?: string;
+        /**
+          * @default 'es'
+         */
+        "lang"?: string;
+    }
     interface ContDownApp {
     }
     interface GifApp {
@@ -124,7 +151,7 @@ declare namespace LocalJSX {
     }
     interface LightPickerRf {
         /**
-          * @default 'es'
+          * @default moment.locale('es')
          */
         "locale"?: string;
     }
@@ -148,6 +175,7 @@ declare namespace LocalJSX {
         "onSearch"?: (event: SearchGifCustomEvent<string>) => void;
     }
     interface IntrinsicElements {
+        "app-validate-input": AppValidateInput;
         "cont-down-app": ContDownApp;
         "gif-app": GifApp;
         "gif-list": GifList;
@@ -161,6 +189,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "app-validate-input": LocalJSX.AppValidateInput & JSXBase.HTMLAttributes<HTMLAppValidateInputElement>;
             "cont-down-app": LocalJSX.ContDownApp & JSXBase.HTMLAttributes<HTMLContDownAppElement>;
             "gif-app": LocalJSX.GifApp & JSXBase.HTMLAttributes<HTMLGifAppElement>;
             "gif-list": LocalJSX.GifList & JSXBase.HTMLAttributes<HTMLGifListElement>;

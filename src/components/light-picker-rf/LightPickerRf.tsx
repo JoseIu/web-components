@@ -1,7 +1,7 @@
 import { Component, Element, h, Prop, State } from '@stencil/core';
 import Lightpick from 'lightpick';
 import moment from 'moment';
-
+// import 'moment/locale/es';
 @Component({
   tag: 'light-picker-rf',
   styleUrl: './light-picker-rf.css',
@@ -22,7 +22,7 @@ export class LightPickerRf {
   // private liveRegion: HTMLElement;
   private lastLoadedRange: string = '';
 
-  @Prop() locale: string = 'es';
+  @Prop() locale: string = moment.locale('es');
 
   @State() prices: { [date: string]: number } = {};
   @State() isLoading: boolean = false;
@@ -31,6 +31,7 @@ export class LightPickerRf {
   @State() returnDate: string = '';
   @State() focusActiveGo: boolean = false;
   @State() isEditing: boolean = false;
+  @State() focusFromKeyboard: boolean = false;
 
   componentWillLoad() {
     this.isLoading = true;
@@ -102,13 +103,18 @@ export class LightPickerRf {
   }
 
   private initializePicker() {
+    moment.locale('es');
+
     this.picker = new Lightpick({
       field: this.departureInput,
       secondField: this.returnInput,
       singleDate: false,
-      format: 'ddd, DD/MM/YY',
-      lang: this.locale,
+      startDate: moment(),
+      endDate: moment().add(1, 'day'),
+      format: 'dddd, DD/MM/YY',
+      lang: 'es',
       numberOfMonths: 2,
+
       minDate: moment(),
       parentEl: this.calendarContainer,
       autoclose: false,
@@ -125,7 +131,6 @@ export class LightPickerRf {
       onSelect: (start, end) => {
         this.departureDate = start ? start.format('ddd, DD/MM/YY') : '';
         this.returnDate = end ? end.format('ddd, DD/MM/YY') : '';
-        console.log('onSelect ');
 
         this.updateCalendarPrices();
       },
@@ -214,32 +219,75 @@ export class LightPickerRf {
     }
   }
   private handleInputClick(event: MouseEvent) {
-    this.isEditing = false;
     event.preventDefault();
+
+    // Siempre que se haga clic con el mouse, se restauran las fechas por defecto
+    const defaultStart = moment();
+    const defaultEnd = moment().add(1, 'day');
+
+    this.picker.setDateRange(defaultStart.toDate(), defaultEnd.toDate());
+
+    // Actualizamos los campos visibles
+    this.departureDate = defaultStart.format('ddd, DD/MM/YY');
+    this.returnDate = defaultEnd.format('ddd, DD/MM/YY');
+    this.departureInput.value = this.departureDate;
+    if (this.returnInput) {
+      this.returnInput.value = this.returnDate;
+    }
+
+    this.isEditing = false; // Cancelamos edición manual
+
     this.openCalendar();
   }
+
   private openCalendar() {
+    this.isEditing = false;
+
+    if (this.departureDate) {
+      const currentDate = moment(this.departureDate, 'ddd, DD/MM/YY');
+      this.picker.setDate(currentDate, true); // true para forzar update
+      this.picker.gotoDate(currentDate);
+    }
+
     this.picker.show();
   }
-  private onFocusInput(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.isEditing = true; // Permitir edición
-    console.log('Input en foco, modo edición:', this.isEditing);
+  private onFocusInput(e: FocusEvent) {
+    const isFromMouse = (e as PointerEvent).pointerType === 'mouse';
+    this.isEditing = !isFromMouse;
 
-    // Si necesitas manejar Lightpick manualmente
-    if (this.picker) {
-      this.picker.hide(); // Opcional: ocultar el datepicker si existe
+    if (this.isEditing) {
+      // Cambia al formato editable solo si se va a editar
+      this.departureInput.value = this.departureDate ? moment(this.departureDate, 'ddd, DD/MM/YY').format('DD/MM/YYYY') : '';
+      this.departureInput.placeholder = 'DD/MM/YYYY';
+    } else {
+      this.departureInput.value = this.departureDate;
     }
   }
+
   private onInputChange(e: Event) {
+    console.log({ isediting: this.isEditing });
     const input = e.target as HTMLInputElement;
     const value = input.value;
     console.log('Valor actual:', value);
     console.log('Valor desde ref:', this.departureInput.value);
 
     // Actualizar el estado si es necesario
-    this.departureDate = value;
+    // this.departureDate = value;
   }
+
+  // private onBlurInput() {
+  //   if (this.isEditing) {
+  //     const manualDate = moment(this.departureInput.value, 'DD/MM/YYYY', true);
+  //     if (manualDate.isValid()) {
+  //       this.departureDate = manualDate.format('ddd, DD/MM/YY');
+  //       this.picker.setDate(manualDate);
+  //       this.departureInput.value = this.departureDate;
+  //     } else {
+  //       this.departureInput.value = this.departureDate;
+  //     }
+  //     this.isEditing = false;
+  //   }
+  // }
 
   render() {
     return (
@@ -261,12 +309,14 @@ export class LightPickerRf {
               ref={el => (this.departureInput = el as HTMLInputElement)}
               class="date-input"
               value={this.departureDate}
-              readonly={!this.isEditing}
               placeholder="Seleccione fecha"
-              onFocus={e => this.onFocusInput(e)}
-              onBlur={() => (this.focusActiveGo = false)}
+              readonly={!this.isEditing}
               onClick={e => this.handleInputClick(e)}
+              onFocus={e => this.onFocusInput(e)}
+              // onBlur={() => this.onBlurInput()}
               onInput={e => this.onInputChange(e)}
+              onMouseDown={() => (this.focusFromKeyboard = false)}
+              onKeyDown={() => (this.focusFromKeyboard = true)}
               tabIndex={0}
             />
 
